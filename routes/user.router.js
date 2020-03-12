@@ -6,7 +6,6 @@ const user = require('../controllers/user.controller');
 
 // register
 router.post('/', user.userRegister)
-//router.post('/register/admin', user.adminRegister)
 // activation
 router.get('/activation/:token', user.activation)
 // login
