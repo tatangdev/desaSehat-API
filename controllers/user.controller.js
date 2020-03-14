@@ -101,10 +101,10 @@ exports.forgot = (req, res) => {
             return token
         })
         .then(result => {
-            success(res, `If a MovieApp account for ${req.body.email} exists, you will receive an email with a link to reset your password.`, result, 200)
+            success(res, `If a DesaSehat account for ${req.body.email} exists, you will receive an email with a link to reset your password.`, result, 200)
         })
         .catch(() => {
-            successMessage(res, `If a MovieApp account for ${req.body.email} exists, you will receive an email with a link to reset your password.`, 200)
+            successMessage(res, `If a DesaSehat account for ${req.body.email} exists, you will receive an email with a link to reset your password.`, 200)
         })
 }
 

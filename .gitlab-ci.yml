@@ -8,7 +8,6 @@ test:
     stage: test
     variables:
         ENVIRONMENT: TESTING
-
     services:
         - mongo:latest
     script:
@@ -27,7 +26,7 @@ deploy:
         - gem install dpl
         - dpl --provider=heroku --app=$HEROKU_APP_NAME --api-key=$HEROKU_API_KEY
       only:
-        - master
+        - development
 
 announce:
     stage: announce
