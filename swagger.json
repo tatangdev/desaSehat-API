@@ -1,9 +1,9 @@
 {
   "swagger": "2.0",
   "info": {
-    "description": "Built by team E",
+    "description": "Built by team C",
     "version": "1.0.0",
-    "title": "Movie App",
+    "title": "Desa Sehat",
     "contact": {
       "email": "romadhonatatang@gmail.com"
     }
@@ -16,22 +16,18 @@
       "description": "Info for users API"
     },
     {
-      "name": "Movie Collection",
-      "description": "Info for movies API"
-    },
-    {
-      "name": "Review Collection",
-      "description": "Info for reviews API"
+      "name": "Campaign Collection",
+      "description": "Info for campaigns API"
     }
   ],
   "paths": {
-    "/user/register": {
+    "/user/": {
       "post": {
         "tags": [
           "User Collection"
         ],
         "summary": "create new user",
-        "description": "",
+        "description": "Create a new user, the first created user is superuser",
         "operationId": "createUser",
         "consumes": [
           "application/json"
@@ -88,16 +84,14 @@
             }
           }
         }
-      }
-    },
-    "/user/register/admin": {
-      "post": {
+      },
+      "put": {
         "tags": [
           "User Collection"
         ],
-        "summary": "create new admin",
+        "summary": "Update user profile",
         "description": "",
-        "operationId": "createAdmin",
+        "operationId": "updateProfile",
         "consumes": [
           "application/json"
         ],
@@ -111,13 +105,13 @@
             "description": "",
             "required": true,
             "schema": {
-              "$ref": "#/definitions/createUser"
+              "$ref": "#/definitions/updateProfile"
             }
           }
         ],
         "responses": {
-          "201": {
-            "description": "user created",
+          "200": {
+            "description": "profile updated",
             "schema": {
               "type": "object",
               "properties": {
@@ -135,6 +129,112 @@
             }
           },
           "422": {
+            "description": "ERROR",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "status": {
+                  "type": "boolean",
+                  "example": false
+                },
+                "message": {
+                  "type": "string"
+                },
+                "errors": {
+                  "type": "object"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "Authorization": []
+          }
+        ]
+      },
+      "get": {
+        "tags": [
+          "User Collection"
+        ],
+        "summary": "Get user data",
+        "description": "",
+        "operationId": "userProfile",
+        "responses": {
+          "200": {
+            "description": "success",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "status": {
+                  "type": "boolean",
+                  "example": true
+                },
+                "message": {
+                  "type": "string"
+                },
+                "data": {
+                  "type": "object"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "ERROR",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "status": {
+                  "type": "boolean",
+                  "example": false
+                },
+                "message": {
+                  "type": "string"
+                },
+                "errors": {
+                  "type": "object"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "Authorization": []
+          }
+        ]
+      },
+      "delete": {
+        "tags": [
+          "User Collection"
+        ],
+        "summary": "Delete current user",
+        "description": "To delete the user by user's token",
+        "produces": [
+          "application/json"
+        ],
+        "security": [
+          {
+            "Authorization": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "success",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "status": {
+                  "type": "boolean",
+                  "example": true
+                },
+                "message": {
+                  "type": "string"
+                }
+              }
+            }
+          },
+          "404": {
             "description": "ERROR",
             "schema": {
               "type": "object",
@@ -215,7 +315,7 @@
         }
       }
     },
-    "/user/login": {
+    "/user/auth": {
       "post": {
         "tags": [
           "User Collection"
@@ -420,7 +520,7 @@
           "User Collection"
         ],
         "summary": "change picture profile",
-        "description": "",
+        "description": "pick an image to upload as profile picture",
         "operationId": "uploadFile",
         "consumes": [
           "multipart/form-data"
@@ -482,84 +582,16 @@
         ]
       }
     },
-    "/user/updateProfile": {
-      "put": {
-        "tags": [
-          "User Collection"
-        ],
-        "summary": "Update user profile",
-        "description": "",
-        "operationId": "updateProfile",
-        "consumes": [
-          "application/json"
-        ],
-        "produces": [
-          "application/json"
-        ],
-        "parameters": [
-          {
-            "in": "body",
-            "name": "body",
-            "description": "",
-            "required": true,
-            "schema": {
-              "$ref": "#/definitions/updateProfile"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "profile updated",
-            "schema": {
-              "type": "object",
-              "properties": {
-                "status": {
-                  "type": "boolean",
-                  "example": true
-                },
-                "message": {
-                  "type": "string"
-                },
-                "data": {
-                  "type": "object"
-                }
-              }
-            }
-          },
-          "422": {
-            "description": "ERROR",
-            "schema": {
-              "type": "object",
-              "properties": {
-                "status": {
-                  "type": "boolean",
-                  "example": false
-                },
-                "message": {
-                  "type": "string"
-                },
-                "errors": {
-                  "type": "object"
-                }
-              }
-            }
-          }
-        },
-        "security": [
-          {
-            "Authorization": []
-          }
-        ]
-      }
-    },
-    "/user/userProfile": {
+    "/user/allUser": {
       "get": {
         "tags": [
           "User Collection"
         ],
-        "summary": "Get user data",
-        "description": "",
-        "operationId": "userProfile",
+        "summary": "Get all users",
+        "description": "show the list of all users - only superuser and admin could perform this action",
+        "produces": [
+          "application/json"
+        ],
         "responses": {
           "200": {
             "description": "success",
@@ -605,14 +637,58 @@
         ]
       }
     },
-    "/movie/addMovies": {
+    "/user/role/{_id}": {
+      "put": {
+        "tags": [
+          "User Collection"
+        ],
+        "summary": "update user's role",
+        "description": "update user role to admin, only superuser could perform this action",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "_id",
+            "in": "path",
+            "description": "fill the chosen user id",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "body",
+            "name": "body",
+            "schema": {
+              "$ref": "#/definitions/updateRole"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successfully change role"
+          },
+          "422": {
+            "description": "Could not update role"
+          }
+        },
+        "security": [
+          {
+            "Authorization": []
+          }
+        ]
+      }
+    },
+    "/campaign/": {
       "post": {
         "tags": [
-          "Movie Collection"
+          "Campaign Collection"
         ],
-        "summary": "Add movie to the collections",
-        "description": "",
-        "operationId": "addMovies",
+        "summary": "create new campaign",
+        "description": "Ask user for campaign's details in order to make a campaign",
+        "operationId": "createCampaign",
         "consumes": [
           "multipart/form-data"
         ],
@@ -620,59 +696,118 @@
           "application/json"
         ],
         "parameters": [
+          {
+            "name": "image",
+            "in": "formData",
+            "description": "ask user for the picture of the patient",
+            "required": true,
+            "type": "file"
+          },
+          {
+            "name": "address",
+            "in": "formData",
+            "description": "ask user for address of the patient",
+            "required": true,
+            "type": "string"
+          },
           {
             "name": "title",
             "in": "formData",
-            "description": "",
+            "description": "ask user for the title of the campaign",
             "required": true,
             "type": "string"
           },
           {
-            "name": "releaseYears",
+            "name": "patient_name",
             "in": "formData",
-            "description": "",
+            "description": "ask user for the name of the patient",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "description",
+            "in": "formData",
+            "description": "ask user for the description of the campaign",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "total_fund",
+            "in": "formData",
+            "description": "ask user for how much the fund needed",
             "required": true,
             "type": "number"
           },
           {
-            "name": "genre",
+            "name": "disease_category",
             "in": "formData",
-            "description": "",
+            "description": "ask user for the category of disease",
+            "enum": [
+              "Asthma",
+              "Diarrhea",
+              "Diabetes Mellitus",
+              "Dengue Fever",
+              "Poor Nutrition",
+              "Hypertension",
+              "Coronary Heart Disease",
+              "Malaria",
+              "Stroke",
+              "Tuberculosis",
+              "Covid19",
+              "Dental Health Problem"
+            ],
             "required": true,
             "type": "string"
           },
           {
-            "name": "duration",
+            "name": "due_date",
             "in": "formData",
-            "description": "",
+            "description": "ask user for the deadline of the campaign",
             "required": true,
-            "type": "number"
+            "type": "date"
           },
           {
-            "name": "image",
+            "name": "gender",
             "in": "formData",
-            "description": "",
-            "required": true,
-            "type": "file"
-          },
-          {
-            "name": "trailer",
-            "in": "formData",
-            "description": "",
+            "description": "ask user for the gender of the patient",
+            "enum": [
+              "Male",
+              "Female"
+            ],
             "required": true,
             "type": "string"
           },
           {
-            "name": "synopsis",
+            "name": "blood_type",
             "in": "formData",
-            "description": "",
+            "description": "ask user for the blood type of the patient",
+            "enum": [
+              "A",
+              "B",
+              "AB",
+              "O"
+            ],
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "birth_place",
+            "in": "formData",
+            "description": "ask user for the birth place of the patient",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "date_of_birth",
+            "in": "formData",
+            "description": "ask user for the birthdate of the patient",
             "required": true,
             "type": "string"
           }
         ],
         "responses": {
-          "200": {
-            "description": "success",
+          "201": {
+            "description": "created",
             "schema": {
               "type": "object",
               "properties": {
@@ -713,16 +848,14 @@
             "Authorization": []
           }
         ]
-      }
-    },
-    "/movie": {
+      },
       "get": {
         "tags": [
-          "Movie Collection"
+          "Campaign Collection"
         ],
-        "summary": "Get movie",
-        "description": "query can be one of the following\n?page=1\n?page=1&field=genre&value=action\n?page=1&field=title&value=spiderman\n\nvalue query can be anything user input",
-        "operationId": "getMovie",
+        "summary": "Get all campaigns",
+        "description": "show all the campaigns",
+        "operationId": "getCampaign",
         "responses": {
           "200": {
             "description": "success",
@@ -760,124 +893,29 @@
               }
             }
           }
-        },
-        "parameters": [
-          {
-            "type": "string",
-            "in": "query",
-            "name": "page",
-            "description": "number from 1 to n"
-          },
-          {
-            "type": "string",
-            "in": "query",
-            "name": "field",
-            "description": "could be title or genre"
-          },
-          {
-            "type": "string",
-            "in": "query",
-            "name": "value",
-            "description": ""
-          }
-        ]
+        }
       }
     },
-    "/movie/{movieId}/updatePoster": {
-      "put": {
+    "/campaign/{campaign_id}/": {
+      "get": {
         "tags": [
-          "Movie Collection"
+          "Campaign Collection"
         ],
-        "summary": "update movie poster",
-        "description": "",
-        "operationId": "updatePoster",
-        "consumes": [
-          "multipart/form-data"
-        ],
-        "produces": [
-          "application/json"
-        ],
+        "summary": "Get campaign details by campaign id",
+        "description": "show details of the campaign based by campaign id",
+        "operationId": "campaignDetails",
         "parameters": [
           {
-            "name": "movieId",
+            "name": "campaign_id",
             "in": "path",
-            "description": "",
+            "description": "insert the campaign id",
             "required": true,
             "type": "string"
-          },
-          {
-            "name": "image",
-            "in": "formData",
-            "description": "file to upload",
-            "required": false,
-            "type": "file"
           }
         ],
         "responses": {
           "200": {
             "description": "success",
-            "schema": {
-              "type": "object",
-              "properties": {
-                "status": {
-                  "type": "boolean",
-                  "example": true
-                },
-                "message": {
-                  "type": "string"
-                },
-                "data": {
-                  "type": "object"
-                }
-              }
-            }
-          },
-          "422": {
-            "description": "ERROR",
-            "schema": {
-              "type": "object",
-              "properties": {
-                "status": {
-                  "type": "boolean",
-                  "example": false
-                },
-                "message": {
-                  "type": "string"
-                },
-                "errors": {
-                  "type": "object"
-                }
-              }
-            }
-          }
-        },
-        "security": [
-          {
-            "Authorization": []
-          }
-        ]
-      }
-    },
-    "/movie/{movieId}": {
-      "get": {
-        "tags": [
-          "Movie Collection"
-        ],
-        "summary": "Get movie details by movie id",
-        "description": "",
-        "operationId": "movieDetails",
-        "parameters": [
-          {
-            "name": "movieId",
-            "in": "path",
-            "description": "",
-            "required": true,
-            "type": "string"
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "if the email registered, we will sent you email",
             "schema": {
               "type": "object",
               "properties": {
@@ -916,11 +954,11 @@
       },
       "put": {
         "tags": [
-          "Movie Collection"
+          "Campaign Collection"
         ],
-        "summary": "Update movie details",
-        "description": "",
-        "operationId": "updateMovie",
+        "summary": "update campaign",
+        "description": "update selected campaign based by the campaign id",
+        "operationId": "updateCampaign",
         "consumes": [
           "application/json"
         ],
@@ -929,9 +967,9 @@
         ],
         "parameters": [
           {
-            "name": "movieId",
+            "name": "campaign_id",
             "in": "path",
-            "description": "",
+            "description": "insert the campaign id",
             "required": true,
             "type": "string"
           },
@@ -941,7 +979,7 @@
             "description": "You can update even if only one parameter",
             "required": true,
             "schema": {
-              "$ref": "#/definitions/movies"
+              "$ref": "#/definitions/updateCampaign"
             }
           }
         ],
@@ -991,29 +1029,26 @@
       },
       "delete": {
         "tags": [
-          "Movie Collection"
+          "Campaign Collection"
         ],
-        "summary": "delete movies",
-        "description": "",
-        "operationId": "deleteMovie",
-        "consumes": [
-          "multipart/form-data"
-        ],
+        "summary": "delete campaign",
+        "description": "delete the selected campaign based by campaign id",
+        "operationId": "deleteCampaign",
         "produces": [
           "application/json"
         ],
         "parameters": [
           {
-            "name": "movieId",
+            "name": "campaign_id",
             "in": "path",
-            "description": "",
+            "description": "insert the selected campaign id",
             "required": true,
             "type": "string"
           }
         ],
         "responses": {
           "200": {
-            "description": "if the email registered, we will sent you email",
+            "description": "deleted",
             "schema": {
               "type": "object",
               "properties": {
@@ -1056,89 +1091,14 @@
         ]
       }
     },
-    "/review/{movieId}": {
-      "post": {
-        "tags": [
-          "Review Collection"
-        ],
-        "summary": "Create review",
-        "description": "",
-        "operationId": "create review",
-        "consumes": [
-          "application/json"
-        ],
-        "produces": [
-          "application/json"
-        ],
-        "parameters": [
-          {
-            "name": "movieId",
-            "in": "path",
-            "description": "",
-            "required": true,
-            "type": "string"
-          },
-          {
-            "in": "body",
-            "name": "body",
-            "description": "You can update even if only one parameter",
-            "required": true,
-            "schema": {
-              "$ref": "#/definitions/review"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "success",
-            "schema": {
-              "type": "object",
-              "properties": {
-                "status": {
-                  "type": "boolean",
-                  "example": true
-                },
-                "message": {
-                  "type": "string"
-                },
-                "data": {
-                  "type": "object"
-                }
-              }
-            }
-          },
-          "422": {
-            "description": "ERROR",
-            "schema": {
-              "type": "object",
-              "properties": {
-                "status": {
-                  "type": "boolean",
-                  "example": false
-                },
-                "message": {
-                  "type": "string"
-                },
-                "errors": {
-                  "type": "object"
-                }
-              }
-            }
-          }
-        },
-        "security": [
-          {
-            "Authorization": []
-          }
-        ]
-      },
+    "/campaign/verify/{campaign_id}/": {
       "put": {
         "tags": [
-          "Review Collection"
+          "Campaign Collection"
         ],
-        "summary": "Update review",
-        "description": "",
-        "operationId": "update review",
+        "summary": "verify campaign",
+        "description": "verify selected campaign based by the campaign id (only superuser and admin could perform this action!)",
+        "operationId": "verifyCampaign",
         "consumes": [
           "application/json"
         ],
@@ -1147,9 +1107,9 @@
         ],
         "parameters": [
           {
-            "name": "movieId",
+            "name": "campaign_id",
             "in": "path",
-            "description": "",
+            "description": "insert the campaign id",
             "required": true,
             "type": "string"
           },
@@ -1159,129 +1119,8 @@
             "description": "You can update even if only one parameter",
             "required": true,
             "schema": {
-              "$ref": "#/definitions/review"
+              "$ref": "#/definitions/verifyCampaign"
             }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "success",
-            "schema": {
-              "type": "object",
-              "properties": {
-                "status": {
-                  "type": "boolean",
-                  "example": true
-                },
-                "message": {
-                  "type": "string"
-                },
-                "data": {
-                  "type": "object"
-                }
-              }
-            }
-          },
-          "422": {
-            "description": "ERROR",
-            "schema": {
-              "type": "object",
-              "properties": {
-                "status": {
-                  "type": "boolean",
-                  "example": false
-                },
-                "message": {
-                  "type": "string"
-                },
-                "errors": {
-                  "type": "object"
-                }
-              }
-            }
-          }
-        },
-        "security": [
-          {
-            "Authorization": []
-          }
-        ]
-      },
-      "get": {
-        "tags": [
-          "Review Collection"
-        ],
-        "summary": "Get review by movie",
-        "description": "",
-        "operationId": "get review",
-        "parameters": [
-          {
-            "in": "path",
-            "name": "movieId",
-            "description": "",
-            "required": true,
-            "type": "string"
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "success",
-            "schema": {
-              "type": "object",
-              "properties": {
-                "status": {
-                  "type": "boolean",
-                  "example": true
-                },
-                "message": {
-                  "type": "string"
-                },
-                "data": {
-                  "type": "object"
-                }
-              }
-            }
-          },
-          "422": {
-            "description": "ERROR",
-            "schema": {
-              "type": "object",
-              "properties": {
-                "status": {
-                  "type": "boolean",
-                  "example": false
-                },
-                "message": {
-                  "type": "string"
-                },
-                "errors": {
-                  "type": "object"
-                }
-              }
-            }
-          }
-        }
-      },
-      "delete": {
-        "tags": [
-          "Review Collection"
-        ],
-        "summary": "Delete review",
-        "description": "",
-        "operationId": "delete review",
-        "consumes": [
-          "application/json"
-        ],
-        "produces": [
-          "application/json"
-        ],
-        "parameters": [
-          {
-            "name": "movieId",
-            "in": "path",
-            "description": "",
-            "required": true,
-            "type": "string"
           }
         ],
         "responses": {
@@ -1341,10 +1180,12 @@
     "createUser": {
       "type": "object",
       "required": [
-        "name",
+        "full_name",
         "email",
         "password",
-        "password_confirmation"
+        "password_confirmation",
+        "gender",
+        "address"
       ],
       "properties": {
         "name": {
@@ -1362,6 +1203,14 @@
         "password_confirmation": {
           "type": "string",
           "example": "aandeani"
+        },
+        "gender": {
+          "type": "string",
+          "example": "Male or Female"
+        },
+        "address": {
+          "type": "string",
+          "example": "batam"
         }
       }
     },
@@ -1422,64 +1271,183 @@
         }
       }
     },
-    "movies": {
+    "updateRole": {
       "type": "object",
       "required": [
-        "title",
-        "synopsis"
+        "role"
       ],
       "properties": {
-        "title": {
+        "role": {
           "type": "string",
-          "example": "A Star Is Born"
-        },
-        "releaseYears": {
-          "type": "number",
-          "example": 2018
-        },
-        "genre": {
-          "type": "string",
-          "example": "Drama"
-        },
-        "duration": {
-          "type": "number",
-          "example": 134
-        },
-        "trailer": {
-          "type": "string",
-          "example": "https://www.youtube.com/watch?v=nSbzyEJ8X9E"
-        },
-        "synopsis": {
-          "type": "string",
-          "example": "A musician helps a young singer find fame as age and alcoholism send his own career into a downward spiral."
+          "example": "admin"
         }
       }
     },
-    "review": {
+    "createCampaign": {
       "type": "object",
+      "required": [
+        "image",
+        "address",
+        "title",
+        "patient_name",
+        "description",
+        "total_fund",
+        "disease_category",
+        "due_date",
+        "gender",
+        "blood_type",
+        "birth_place",
+        "date_of_birth"
+      ],
       "properties": {
+        "image": {
+          "type": "file"
+        },
+        "address": {
+          "type": "string",
+          "example": "the patient's address"
+        },
         "title": {
           "type": "string",
-          "example": "Surprised at high reviews"
+          "example": "the campaign's title"
         },
-        "rating": {
-          "type": "number",
-          "example": 7
+        "patient_name": {
+          "type": "string",
+          "example": "the patient's name"
         },
         "description": {
           "type": "string",
-          "example": "I was looking forward to this due to the high ratings and that I like the lead actors. However felt it was a poor story, fairly predictable, slightly cringeworthy acting, I kept hoping it would improve but was disappointed"
+          "example": "the campaign's description"
+        },
+        "total_fund": {
+          "type": "number",
+          "example": 1000000
+        },
+        "disease_category": {
+          "type": "string",
+          "enum": [
+            "Asthma",
+            "Diarrhea",
+            "Diabetes Mellitus",
+            "Dengue Fever",
+            "Poor Nutrition",
+            "Hypertension",
+            "Coronary Heart Disease",
+            "Malaria",
+            "Stroke",
+            "Tuberculosis",
+            "Covid19",
+            "Dental Health Problem"
+          ]
+        },
+        "due_date": {
+          "type": "date"
+        },
+        "gender": {
+          "type": "string",
+          "enum": [
+            "Male",
+            "Female"
+          ]
+        },
+        "blood_type": {
+          "type": "string",
+          "enum": [
+            "A",
+            "B",
+            "AB",
+            "O"
+          ]
+        },
+        "birth_place": {
+          "type": "date"
+        },
+        "date_of_birth": {
+          "type": "date"
         }
-      },
-      "required": [
-        "title",
-        "rating",
-        "description"
-      ]
+      }
     },
-    "movieTitle": {
-      "type": "string",
-      "example": "a_star_is_born"
+    "updateCampaign": {
+      "type": "object",
+      "properties": {
+        "image": {
+          "type": "file"
+        },
+        "address": {
+          "type": "string",
+          "example": "the patient's address"
+        },
+        "title": {
+          "type": "string",
+          "example": "the campaign's title"
+        },
+        "patient_name": {
+          "type": "string",
+          "example": "the patient's name"
+        },
+        "description": {
+          "type": "string",
+          "example": "the campaign's description"
+        },
+        "total_fund": {
+          "type": "number",
+          "example": 1000000
+        },
+        "disease_category": {
+          "type": "string",
+          "enum": [
+            "Asthma",
+            "Diarrhea",
+            "Diabetes Mellitus",
+            "Dengue Fever",
+            "Poor Nutrition",
+            "Hypertension",
+            "Coronary Heart Disease",
+            "Malaria",
+            "Stroke",
+            "Tuberculosis",
+            "Covid19",
+            "Dental Health Problem"
+          ]
+        },
+        "due_date": {
+          "type": "date"
+        },
+        "gender": {
+          "type": "string",
+          "enum": [
+            "Male",
+            "Female"
+          ]
+        },
+        "blood_type": {
+          "type": "string",
+          "enum": [
+            "A",
+            "B",
+            "AB",
+            "O"
+          ]
+        },
+        "birth_place": {
+          "type": "date"
+        },
+        "date_of_birth": {
+          "type": "date"
+        }
+      }
+    },
+    "verifyCampaign": {
+      "type": "object",
+      "required": [
+        "verify"
+      ],
+      "properties": {
+        "verify": {
+          "type": "boolean",
+          "example": true
+        }
+      }
     }
   },
   "externalDocs": {
