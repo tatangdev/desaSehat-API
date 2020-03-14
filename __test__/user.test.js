@@ -1,3 +1,101 @@
+const supertest = require('supertest')
+const mongoose = require('mongoose')
+const jwt = require('jsonwebtoken')
+const bcrypt = require('bcryptjs')
+require('dotenv').config()
+process.log = {}
+
+const User = require('../models/user.schema')
+
+//const { generateUser } = require('./fixtures/user')
+const app = require('../app')
+const request = supertest(app)
+
+//const user = generateUser()
+
+async function removeAllCollections () {
+  const collections = Object.keys(mongoose.connection.collections)
+  for (const collectionName of collections) {
+    const collection = mongoose.connection.collections[collectionName]
+    await collection.deleteMany()
+  }
+}
+
+async function dropAllCollections () {
+  const collections = Object.keys(mongoose.connection.collections)
+  for (const collectionName of collections) {
+    const collection = mongoose.connection.collections[collectionName]
+    try {
+      await collection.drop()
+    } catch (error) {
+      // Sometimes this error happens, but you can safely ignore it
+      if (error.message === 'ns not found') return
+      // This error occurs when you use it.todo. You can
+      // safely ignore this error too
+      if (error.message.includes('a background operation is currently running')) return
+      console.log(error.message)
+    }
+  }
+}
+
+beforeAll(async (done) => {
+  mongoose
+    .connect(process.env.DB_TESTING, {
+      useNewUrlParser: true,
+      useUnifiedTopology: true,
+      useCreateIndex: true,
+      useFindAndModify: false
+    })
+    .then(() => {
+      // console.log('connected')
+    })
+    .catch(err => console.error(err))
+  await removeAllCollections()
+  done()
+})
+
+// Connection should be close, otherwise jest will show a warning
+// see https://github.com/facebook/jest/issues/7092#issuecomment-429049494
+
+// Disconnect Mongoose
+afterAll(async (done) => {
+  await dropAllCollections()
+  await mongoose.connection.close()
+  done()
+})
+
+describe('User endpoint', () => {
+  it('Create a new user', async done => {
+    const user = {
+        full_name: "user testing",
+        email: "test@mail.com",
+        password: "1234567",
+        password_confirmation: "1234567",
+        bio: "bio",
+        gender: "Male",
+        address: "address"
+    }
+    const res = await request.post('/api/user')
+      .send(Object.assign(user, { role: 'super' }))
+
+    const { status, data } = res.body
+
+    // expect(data.full_name).toBe(`${user.first_name} ${user.last_name}`)
+
+    expect(status).toBe(true)
+    expect(res.statusCode).toEqual(201)
+    expect(typeof data).toEqual('object')
+    expect(data).toHaveProperty('token')
+    expect(true).toEqual(true)
+    done()
+  })
+
+})
+
+
+
+
+/*
 const chai = require('chai');
 const chaiHttp = require('chai-http');
 const bcrypt = require('bcryptjs');
@@ -149,3 +247,4 @@ describe('USER', () => {
         })
     })
 })
+*/
