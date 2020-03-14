@@ -13,7 +13,7 @@ const imagekitInstance = new Imagekit({
 
 // user register
 exports.userRegister = async (req, res) => {
-    const { full_name, email, password, password_confirmation, gender, address} = req.body
+    const { full_name, email, password, password_confirmation, bio, gender, address} = req.body
 
     try {
         if (password != password_confirmation) return failedMessage(
@@ -25,9 +25,9 @@ exports.userRegister = async (req, res) => {
         const users = await User.find()
         let user
         if(users.length <1) {
-            user = await User.create({ full_name, email, encrypted_password, gender, address, role: 'superuser'})
+            user = await User.create({ full_name, email, encrypted_password, bio, gender, address, role: 'superuser'})
         } else {
-            user = await User.create({ full_name, email, encrypted_password, gender, address})
+            user = await User.create({ full_name, email, encrypted_password, bio, gender, address})
         }
 
         const token = jwt.sign({ _id: user._id, role: user.role}, process.env.SECRET_KEY )
@@ -78,6 +78,7 @@ exports.login = (req, res) => {
                 role: data.role,
                 full_name: data.full_name,
                 email: data.email,
+                bio: data.bio,
                 image: data.image,
                 token: jwt.sign({ _id: data._id, role: data.role }, process.env.SECRET_KEY)
             }, 200)
@@ -101,10 +102,10 @@ exports.forgot = (req, res) => {
             return token
         })
         .then(result => {
-            success(res, `If a DesaSehat account for ${req.body.email} exists, you will receive an email with a link to reset your password.`, result, 200)
+            success(res, `If a MovieApp account for ${req.body.email} exists, you will receive an email with a link to reset your password.`, result, 200)
         })
         .catch(() => {
-            successMessage(res, `If a DesaSehat account for ${req.body.email} exists, you will receive an email with a link to reset your password.`, 200)
+            successMessage(res, `If a MovieApp account for ${req.body.email} exists, you will receive an email with a link to reset your password.`, 200)
         })
 }
 
