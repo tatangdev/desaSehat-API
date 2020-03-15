@@ -76,7 +76,7 @@ describe('User endpoint', () => {
         address: "address"
     }
     const res = await request.post('/api/user')
-      .send(Object.assign(user, { role: 'super' }))
+      .send(Object.assign(user, { role: 'superuser' }))
 
     const { status, data } = res.body
 
