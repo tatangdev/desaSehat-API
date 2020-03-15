@@ -8,11 +8,11 @@ test:
     stage: test
     variables:
         ENVIRONMENT: TESTING
-        DB_TESTING: "mongodb://localhost:27018/test"
+        # DB_TESTING: "mongodb://localhost:27018/test"
     services:
         - mongo:latest
     script:
-        - echo $DB_TESTING
+        # - echo $DB_TESTING
         - npm install
         - npm test
     only:
