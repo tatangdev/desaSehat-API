@@ -2,7 +2,7 @@ const environment = process.env.ENVIRONMENT || 'DEVELOPMENT';
 
 const conf = {
     DEVELOPMENT: process.env.DB_DEVELOPMENT,
-    TESTING: process.env.DB_TESTING,
+    test: process.env.DB_TESTING,
     PRODUCTION: process.env.DB_PRODUCTION,
     STAGING: process.env.DB_STAGING
 };
