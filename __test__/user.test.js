@@ -68,7 +68,7 @@ describe('User endpoint', () => {
   it('Create a new user', async done => {
     const user = {
         full_name: "user testing",
-        email: "test@mail.com",
+        email: "test1@mail.com",
         password: "1234567",
         password_confirmation: "1234567",
         bio: "bio",
@@ -86,9 +86,9 @@ describe('User endpoint', () => {
     expect(res.statusCode).toEqual(201)
     expect(typeof data).toEqual('object')
     expect(data).toHaveProperty('token')
-    expect(true).toEqual(true)
     done()
   })
+
 
 })
 
