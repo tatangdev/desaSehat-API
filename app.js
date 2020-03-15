@@ -37,11 +37,9 @@ app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 mongoose.connect(MONGODB_URI,
     { useNewUrlParser: true, useUnifiedTopology: true, useCreateIndex: true, useFindAndModify: false })
     .then(() => {
-        console.log(`Successfull connected to database Desa Sehat app`)
+        console.log(`Successfully connected to database Desa Sehat app`)
     })
-    .catch(() => {
-        process.exit()
-    });
+    .catch(err => console.log(err))
 mongoose.set('useFindAndModify', false)
 
 module.exports = app;
