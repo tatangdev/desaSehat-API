@@ -67,7 +67,7 @@ afterAll(async (done) => {
 
 describe('User endpoint', () => {
   it('Create a new user', async done => {
-    const user = {
+    const userTest = {
         full_name: "user testing",
         email: "test1@mail.com",
         password: "1234567",
@@ -76,20 +76,44 @@ describe('User endpoint', () => {
         gender: "Male",
         address: "address"
     }
+    //console.log(user)
     const res = await request.post('/api/user')
-      .send(Object.assign(user, { role: 'superuser' }))
-
-    const { status, data } = res.body
-
-    // expect(data.full_name).toBe(`${user.first_name} ${user.last_name}`)
-
-    expect(status).toBe(true)
-    expect(res.statusCode).toEqual(201)
-    expect(typeof data).toEqual('object')
-    expect(data).toHaveProperty('token')
-    done()
+        .set('Content-Type', 'application/json')
+        .send(userTest)
+        .then( res => {
+            const { status, data } = res.body
+            expect(status).toBe(true)
+            expect(res.statusCode).toEqual(201)
+            expect(typeof data).toEqual('object')
+            expect(data).toHaveProperty('token')
+            done()
+        })
   })
 
+  it('Login the created user', done => {
+    const userAuth = {
+        full_name: "user testing",
+        email: "test1@mail.com",
+        password: "1234567",
+        password_confirmation: "1234567",
+        bio: "bio",
+        gender: "Male",
+        address: "address"
+    }
+    request.post('/api/user/auth')
+      .set('Content-Type', 'application/json')
+      .send(userAuth)
+      .then(res => {
+        const { status, data } = res.body
+
+        expect(status).toBe(true)
+        expect(res.statusCode).toEqual(200)
+        expect(typeof data).toEqual('object')
+        expect(data).toHaveProperty('token')
+        expect(true).toEqual(true)
+        done()
+      })
+  })
 
 })
 

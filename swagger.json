@@ -8,7 +8,7 @@
       "email": "romadhonatatang@gmail.com"
     }
   },
-  "host": "",
+  "host": "localhost:8000",
   "basePath": "/api",
   "tags": [
     {
@@ -679,6 +679,133 @@
             "Authorization": []
           }
         ]
+      }
+    },
+    "/address": {
+      "get": {
+        "tags": [
+          "Address Collection"
+        ],
+        "summary": "Get all provinces",
+        "description": "Show all provinces in Indonesia",
+        "operationId": "showAddress",
+        "produces": [
+          "application/json"
+        ],
+        "responses": {
+          "200": {
+            "description": "Returns an array contains list of province"
+          },
+          "422": {
+            "description": "Cant show the list of province"
+          }
+        }
+      }
+    },
+    "/address/{id_prov}/": {
+      "get": {
+        "tags": [
+          "Address Collection"
+        ],
+        "summary": "Get all the districts",
+        "description": "Show all the districts based by province id",
+        "operationId": "show distrcits",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "id_prov",
+            "in": "path",
+            "description": "Id of province",
+            "required": true,
+            "type": "number"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Returns an array contains list of districts"
+          },
+          "422": {
+            "description": "Cant show the list of districts"
+          }
+        }
+      }
+    },
+    "/address/{id_prov}/{id_dist}": {
+      "get": {
+        "tags": [
+          "Address Collection"
+        ],
+        "summary": "Get all sub districts",
+        "description": "show all sub districts based by disctrict id",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "id_prov",
+            "in": "path",
+            "description": "Id of province",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "id_dist",
+            "in": "path",
+            "description": "Id of district",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Returns an array contains list of province"
+          },
+          "422": {
+            "description": "Cant show the list of districts"
+          }
+        }
+      }
+    },
+    "/address/{id_prov}/{id_dist}/{id_reg}": {
+      "get": {
+        "tags": [
+          "Address Collection"
+        ],
+        "summary": "Get all village",
+        "description": "Get all village based by sub disctrict id",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "id_prov",
+            "in": "path",
+            "description": "Id of province",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "id_dist",
+            "in": "path",
+            "description": "Id of district",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "id_reg",
+            "in": "path",
+            "description": "Id of sub district",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Returns an array contains list of province"
+          }
+        }
       }
     },
     "/campaign/": {

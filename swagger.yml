@@ -135,15 +135,15 @@ paths:
         - Authorization: []
     delete:
       tags:
-      - User Collection
+        - User Collection
       summary: Delete current user
-      description: "To delete the user by user's token"
+      description: To delete the user by user's token
       produces:
-      - "application/json"
+        - application/json
       security:
-      - Authorization: []
+        - Authorization: []
       responses:
-        200:
+        '200':
           description: success
           schema:
             type: object
@@ -153,8 +153,7 @@ paths:
                 example: true
               message:
                 type: string
-
-        404:
+        '404':
           description: ERROR
           schema:
             type: object
@@ -166,7 +165,6 @@ paths:
                 type: string
               errors:
                 type: object
-    
   '/user/activation/{token}':
     get:
       tags:
@@ -344,7 +342,7 @@ paths:
       tags:
         - User Collection
       summary: change picture profile
-      description: 'pick an image to upload as profile picture'
+      description: pick an image to upload as profile picture
       operationId: uploadFile
       consumes:
         - multipart/form-data
@@ -386,13 +384,13 @@ paths:
   /user/allUser:
     get:
       tags:
-      - User Collection
-      summary: "Get all users"
-      description: "show the list of all users - only superuser and admin could perform this action"
+        - User Collection
+      summary: Get all users
+      description: show the list of all users - only superuser and admin could perform this action
       produces:
-      - "application/json"
+        - application/json
       responses:
-        200:
+        '200':
           description: success
           schema:
             type: object
@@ -404,7 +402,7 @@ paths:
                 type: string
               data:
                 type: object
-        422:
+        '422':
           description: ERROR
           schema:
             type: object
@@ -418,33 +416,120 @@ paths:
                 type: object
       security:
         - Authorization: []
-  /user/role/{_id}:
+  '/user/role/{_id}':
     put:
       tags:
-      - User Collection
+        - User Collection
       summary: update user's role
-      description: update user role to admin, only superuser could perform this action
+      description: 'update user role to admin, only superuser could perform this action'
       consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - name: _id
+          in: path
+          description: fill the chosen user id
+          required: true
+          type: string
+        - in: body
+          name: body
+          schema:
+            $ref: '#/definitions/updateRole'
+      responses:
+        '200':
+          description: Successfully change role
+        '422':
+          description: Could not update role
+      security:
+        - Authorization: []
+        
+  /address:
+    get:
+      tags:
+      - "Address Collection"
+      summary: "Get all provinces"
+      description: "Show all provinces in Indonesia"
+      operationId: showAddress
+      produces:
       - "application/json"
+      responses:
+        200:
+          description: Returns an array contains list of province
+        422:
+          description: Cant show the list of province
+  /address/{id_prov}/:
+    get:
+      tags:
+      - "Address Collection"
+      summary: "Get all the districts"
+      description: "Show all the districts based by province id"
+      operationId: show distrcits
       produces:
       - "application/json"
       parameters:
-      - name: "_id"
+      - name: "id_prov"
         in: "path"
-        description: "fill the chosen user id"
+        description: "Id of province"
         required: true
-        type: "string"
-      - in: "body"
-        name: "body"
-        schema:
-          $ref: "#/definitions/updateRole"
+        type: "number"
       responses:
         200:
-          description: "Successfully change role"
+          description: Returns an array contains list of districts
         422:
-          description: "Could not update role"
-      security:
-        - Authorization: []
+          description: Cant show the list of districts
+  /address/{id_prov}/{id_dist}:
+    get:
+      tags:
+      - "Address Collection"
+      summary: "Get all sub districts"
+      description: "show all sub districts based by disctrict id"
+      produces:
+      - "application/json"
+      parameters:
+      - name: "id_prov"
+        in: "path"
+        description: "Id of province"
+        required: true
+        type: "string"
+      - name: "id_dist"
+        in: "path"
+        description: "Id of district"
+        required: true
+        type: "string"
+      responses:
+        200:
+          description: Returns an array contains list of province
+        422:
+          description: Cant show the list of districts
+  /address/{id_prov}/{id_dist}/{id_reg}:
+    get:
+      tags:
+      - "Address Collection"
+      summary: "Get all village"
+      description: "Get all village based by sub disctrict id"
+      produces:
+      - "application/json"
+      parameters:
+      - name: "id_prov"
+        in: "path"
+        description: "Id of province"
+        required: true
+        type: "string"
+      - name: "id_dist"
+        in: "path"
+        description: "Id of district"
+        required: true
+        type: "string"
+      - name: "id_reg"
+        in: "path"
+        description: "Id of sub district"
+        required: true
+        type: "string"
+      responses:
+        200:
+          description: Returns an array contains list of province
+
   /campaign/:
     post:
       tags:
@@ -457,87 +542,87 @@ paths:
       produces:
         - application/json
       parameters:
-      - name: image
-        in: formData
-        description: 'ask user for the picture of the patient'
-        required: true
-        type: file
-      - name: address
-        in: formData
-        description: 'ask user for address of the patient'
-        required: true
-        type: string
-      - name: title
-        in: formData
-        description: 'ask user for the title of the campaign'
-        required: true
-        type: string
-      - name: patient_name
-        in: formData
-        description: 'ask user for the name of the patient'
-        required: true
-        type: string
-      - name: description
-        in: formData
-        description: 'ask user for the description of the campaign'
-        required: true
-        type: string
-      - name: total_fund
-        in: formData
-        description: 'ask user for how much the fund needed'
-        required: true
-        type: number
-      - name: disease_category
-        in: formData
-        description: 'ask user for the category of disease'
-        enum:
-        - Asthma
-        - Diarrhea
-        - Diabetes Mellitus
-        - Dengue Fever
-        - Poor Nutrition
-        - Hypertension
-        - Coronary Heart Disease
-        - Malaria
-        - Stroke
-        - Tuberculosis
-        - Covid19
-        - Dental Health Problem
-        required: true
-        type: string
-      - name: due_date
-        in: formData
-        description: 'ask user for the deadline of the campaign'
-        required: true
-        type: date
-      - name: gender
-        in: formData
-        description: ask user for the gender of the patient
-        enum:
-        - Male
-        - Female
-        required: true
-        type: string
-      - name: blood_type
-        in: formData
-        description: ask user for the blood type of the patient
-        enum:
-        - A
-        - B
-        - AB
-        - O
-        required: true
-        type: string
-      - name: birth_place
-        in: formData
-        description: 'ask user for the birth place of the patient'
-        required: true
-        type: string
-      - name: date_of_birth
-        in: formData
-        description: ask user for the birthdate of the patient
-        required: true
-        type: string
+        - name: image
+          in: formData
+          description: ask user for the picture of the patient
+          required: true
+          type: file
+        - name: address
+          in: formData
+          description: ask user for address of the patient
+          required: true
+          type: string
+        - name: title
+          in: formData
+          description: ask user for the title of the campaign
+          required: true
+          type: string
+        - name: patient_name
+          in: formData
+          description: ask user for the name of the patient
+          required: true
+          type: string
+        - name: description
+          in: formData
+          description: ask user for the description of the campaign
+          required: true
+          type: string
+        - name: total_fund
+          in: formData
+          description: ask user for how much the fund needed
+          required: true
+          type: number
+        - name: disease_category
+          in: formData
+          description: ask user for the category of disease
+          enum:
+            - Asthma
+            - Diarrhea
+            - Diabetes Mellitus
+            - Dengue Fever
+            - Poor Nutrition
+            - Hypertension
+            - Coronary Heart Disease
+            - Malaria
+            - Stroke
+            - Tuberculosis
+            - Covid19
+            - Dental Health Problem
+          required: true
+          type: string
+        - name: due_date
+          in: formData
+          description: ask user for the deadline of the campaign
+          required: true
+          type: date
+        - name: gender
+          in: formData
+          description: ask user for the gender of the patient
+          enum:
+            - Male
+            - Female
+          required: true
+          type: string
+        - name: blood_type
+          in: formData
+          description: ask user for the blood type of the patient
+          enum:
+            - A
+            - B
+            - AB
+            - O
+          required: true
+          type: string
+        - name: birth_place
+          in: formData
+          description: ask user for the birth place of the patient
+          required: true
+          type: string
+        - name: date_of_birth
+          in: formData
+          description: ask user for the birthdate of the patient
+          required: true
+          type: string
       responses:
         '201':
           description: created
@@ -569,7 +654,7 @@ paths:
       tags:
         - Campaign Collection
       summary: Get all campaigns
-      description: 'show all the campaigns'
+      description: show all the campaigns
       operationId: getCampaign
       responses:
         '200':
@@ -596,12 +681,12 @@ paths:
                 type: string
               errors:
                 type: object
-  /campaign/{campaign_id}/:
+  '/campaign/{campaign_id}/':
     get:
       tags:
         - Campaign Collection
       summary: Get campaign details by campaign id
-      description: 'show details of the campaign based by campaign id'
+      description: show details of the campaign based by campaign id
       operationId: campaignDetails
       parameters:
         - name: campaign_id
@@ -638,7 +723,7 @@ paths:
       tags:
         - Campaign Collection
       summary: update campaign
-      description: 'update selected campaign based by the campaign id'
+      description: update selected campaign based by the campaign id
       operationId: updateCampaign
       consumes:
         - application/json
@@ -687,7 +772,7 @@ paths:
       tags:
         - Campaign Collection
       summary: delete campaign
-      description: 'delete the selected campaign based by campaign id'
+      description: delete the selected campaign based by campaign id
       operationId: deleteCampaign
       produces:
         - application/json
@@ -699,7 +784,7 @@ paths:
           type: string
       responses:
         '200':
-          description: 'deleted'
+          description: deleted
           schema:
             type: object
             properties:
@@ -724,12 +809,12 @@ paths:
                 type: object
       security:
         - Authorization: []
-  /campaign/verify/{campaign_id}/:
+  '/campaign/verify/{campaign_id}/':
     put:
       tags:
         - Campaign Collection
       summary: verify campaign
-      description: 'verify selected campaign based by the campaign id (only superuser and admin could perform this action!)'
+      description: verify selected campaign based by the campaign id (only superuser and admin could perform this action!)
       operationId: verifyCampaign
       consumes:
         - application/json
@@ -774,7 +859,6 @@ paths:
                 type: object
       security:
         - Authorization: []
-
 securityDefinitions:
   Authorization:
     type: apiKey
@@ -886,38 +970,38 @@ definitions:
       description:
         type: string
         example: the campaign's description
-      total_fund: 
+      total_fund:
         type: number
         example: 1000000
       disease_category:
         type: string
         enum:
-        - Asthma
-        - Diarrhea
-        - Diabetes Mellitus
-        - Dengue Fever
-        - Poor Nutrition
-        - Hypertension
-        - Coronary Heart Disease
-        - Malaria
-        - Stroke
-        - Tuberculosis
-        - Covid19
-        - Dental Health Problem
+          - Asthma
+          - Diarrhea
+          - Diabetes Mellitus
+          - Dengue Fever
+          - Poor Nutrition
+          - Hypertension
+          - Coronary Heart Disease
+          - Malaria
+          - Stroke
+          - Tuberculosis
+          - Covid19
+          - Dental Health Problem
       due_date:
         type: date
       gender:
         type: string
         enum:
-        - Male
-        - Female
+          - Male
+          - Female
       blood_type:
         type: string
         enum:
-        - A
-        - B
-        - AB
-        - O
+          - A
+          - B
+          - AB
+          - O
       birth_place:
         type: date
       date_of_birth:
@@ -939,38 +1023,38 @@ definitions:
       description:
         type: string
         example: the campaign's description
-      total_fund: 
+      total_fund:
         type: number
         example: 1000000
       disease_category:
         type: string
         enum:
-        - Asthma
-        - Diarrhea
-        - Diabetes Mellitus
-        - Dengue Fever
-        - Poor Nutrition
-        - Hypertension
-        - Coronary Heart Disease
-        - Malaria
-        - Stroke
-        - Tuberculosis
-        - Covid19
-        - Dental Health Problem
+          - Asthma
+          - Diarrhea
+          - Diabetes Mellitus
+          - Dengue Fever
+          - Poor Nutrition
+          - Hypertension
+          - Coronary Heart Disease
+          - Malaria
+          - Stroke
+          - Tuberculosis
+          - Covid19
+          - Dental Health Problem
       due_date:
         type: date
       gender:
         type: string
         enum:
-        - Male
-        - Female
+          - Male
+          - Female
       blood_type:
         type: string
         enum:
-        - A
-        - B
-        - AB
-        - O
+          - A
+          - B
+          - AB
+          - O
       birth_place:
         type: date
       date_of_birth:
@@ -983,7 +1067,6 @@ definitions:
       verify:
         type: boolean
         example: true
-
 externalDocs:
   description: Backend repository
   url: 'https://gitlab.com/romadhonatatang/miniproject-2'
