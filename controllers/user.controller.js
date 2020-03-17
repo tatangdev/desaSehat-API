@@ -45,7 +45,7 @@ exports.userRegister = async (req, res) => {
 
         success(res, 'A verification link has been sent to your email account. Please click on the link that has just been sent to your email account to verify your email and continue the registration process.', { ...user._doc, token, encrypted_password: undefined}, 201)
     } catch (err) {
-        failed(res, 'Can\'t create user', err, 422)
+        failedMessage(res, err, 422)
     }
 }
 
@@ -102,11 +102,9 @@ exports.forgot = (req, res) => {
             return token
         })
         .then(result => {
-            success(res, `If a MovieApp account for ${req.body.email} exists, you will receive an email with a link to reset your password.`, result, 200)
+            success(res, `You will receive an email with a link to reset your password.`, result, 200)
         })
-        .catch(() => {
-            successMessage(res, `If a MovieApp account for ${req.body.email} exists, you will receive an email with a link to reset your password.`, 200)
-        })
+        .catch(err => failedMessage(res, err, 422))
 }
 
 // reset password // done
@@ -162,18 +160,17 @@ exports.userProfile = (req, res) => {
     let user = jwt.verify(req.headers.authorization, process.env.SECRET_KEY)
     User.findOne({ _id: user._id })
         .then(data => success(res, 'success get user profile', data, 200))
-        .catch(err => failed(res, 'failed get user profile', err, 422))
+        .catch(err => failedMessage(res, err, 422))
 }
 
 // get all users - only superuser and admin could do this acton
 exports.getAll = (req, res) => {
-    console.log(req.user.role)
     let user = jwt.verify(req.headers.authorization, process.env.SECRET_KEY)
-    if (req.user.role !== 'admin') return failedMessage(
+    if (req.user.role == 'user') return failedMessage(
         res, 'You are not authorized to do this action', 403)
     User.find().select(['-encrypted_password'])
         .then(data => success(res, 'success get all users profile', data, 200))
-        .catch(err => failed(res, 'failed get all users profile', err, 422))
+        .catch(err => failedMessage(res, err, 422))
 }
 
 //delete current user
@@ -181,13 +178,13 @@ exports.delete = (req, res) => {
     let user = jwt.verify(req.headers.authorization, process.env.SECRET_KEY)
     User.findByIdAndDelete(req.user._id).select(['-encrypted_password'])
         .then(data => success(res, 'success delete user profile', undefined, 200))
-        .catch(err => failed(res, 'failed to delete user profile', err, 422))
+        .catch(err => failedMessage(res, err, 422))
 }
 
 //change user's role - only superuser could do this action!
 exports.changeRole = (req, res) => {
     let user = jwt.verify(req.headers.authorization, process.env.SECRET_KEY)
-    if (req.user.role !== 'superuser' || 'admin') return failedMessage(
+    if (req.user.role == 'user') return failedMessage(
         res, 'You are not authorized to do this action', 403)
     User.findByIdAndUpdate(req.params._id, { $set: { role: req.body.role}}, {new: true})
         .select(['-encrypted_password'])

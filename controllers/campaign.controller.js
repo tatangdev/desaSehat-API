@@ -46,7 +46,7 @@ exports.createCampaign = async (req, res) => {
         })
         
         .then(result => success(res, 'successfully add a campaign', result, 201))
-        .catch(err => failed(res, 'failed to add movie', err, 422))
+        .catch(err => failedMessage(res, err, 422))
 }
 
 //show all campaign
@@ -57,7 +57,7 @@ exports.showAll = (req, res) => {
                 if (!data) return failedMessage(res, 'campaign not found', 422)
                 success(res, 'success', data, 201)
             })
-            .catch(err => failed(res, 'failed', err, 422 ))
+            .catch(err => failedMessage(res, err, 422))
 }
 
 // show a campaign by campaign id
@@ -67,9 +67,7 @@ exports.findId = (req, res) => {
     .then(result => {
         return success(res, 'success get campaign details', result, 200)
     })
-    .catch(err => {
-        return res.status(500).json({err:err})
-    })
+    .catch(err => failedMessage(res, err, 422))
 }
 
 // update a campaign by campaign id
@@ -80,7 +78,7 @@ exports.updateCampaign = (req, res) => {
                 if (!data) return failedMessage(res, 'campaign not found', 422)
                 success(res, 'successfully update campaign', data, 200)
             })
-            .catch(err => failed(res, 'failed update', err, 422))
+            .catch(err => failedMessage(res, err, 422))
 }
 
 // validate campaign
@@ -93,7 +91,7 @@ exports.verifyCampaign = (req, res) => {
                 if (!data) return failedMessage(res, 'campaign not found', 422)
                 success(res, 'successfully validate campaign', data, 200)
             })
-            .catch(err => failed(res, 'failed to validate', err, 422))
+            .catch(err => failedMessage(res, err, 422))
 }
 
 // remove campaign
@@ -104,5 +102,5 @@ exports.removeCampaign = (req, res) => {
                 if (!data) return failedMessage(res, 'campaign not found', 422)
                 success(res, `${data.title} has been deleted`, data, 200)
             })
-            .catch(err => failed(res, 'failed', err, 422))
+            .catch(err => failedMessage(res, err, 422))
 }
